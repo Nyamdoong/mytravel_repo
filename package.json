@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "express": "^5.1.0",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.0",
+    "react-router-dom": "^6.30.0"
   }
 }

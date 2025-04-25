@@ -1,11 +1,17 @@
 const express = require('express');
 const mysql = require('mysql2');
+const path = require('path');
 
 const app = express();
 const port = 3000;
 
-app.use(express.json()); // ⭐️ POST로 JSON 받을 때 꼭 필요!
+// ⭐️ POST로 JSON 받을 때 꼭 필요!
+app.use(express.json());
 
+// ⭐️ 프론트(static) 연결 (public 폴더에 index.html 있어야 함)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ⭐️ MySQL 연결 설정
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -21,7 +27,7 @@ db.connect((err) => {
   console.log('MySQL 연결 성공!');
 });
 
-// ✅ 질문 리스트 GET
+// ✅ 질문 리스트 GET (질문 가져오기)
 app.get('/questions', (req, res) => {
   db.query('SELECT * FROM questions', (err, results) => {
     if (err) {
@@ -32,7 +38,7 @@ app.get('/questions', (req, res) => {
   });
 });
 
-// ✅ 결과 계산 POST (여기 새로 추가!)
+// ✅ 결과 계산 POST (MBTI 결과 계산)
 app.post('/result', (req, res) => {
   const answers = req.body.answers; // 예: [1, 2, 1, 2, 1, 2]
 
@@ -58,7 +64,7 @@ app.post('/result', (req, res) => {
       (mbtiCount.A >= mbtiCount.R ? 'A' : 'R') +
       (mbtiCount.U >= mbtiCount.N ? 'U' : 'N');
 
-    // 결과 테이블에서 MBTI 결과 가져오기
+    // ⭐️ 결과 테이블에서 MBTI 결과 가져오기
     db.query('SELECT * FROM results WHERE mbti = ?', [mbti], (err, resultData) => {
       if (err) {
         return res.status(500).send('DB 오류');
@@ -71,12 +77,12 @@ app.post('/result', (req, res) => {
   });
 });
 
+// ✅ 첫 화면 index.html로 연결 (여기 중요!)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // ⭐️ 외부 접속 가능하게 listen
 app.listen(port, '0.0.0.0', () => {
   console.log(`서버가 포트 ${port}번에서 외부 접속 가능하게 실행 중!`);
-});
-
-
-app.get('/', (req, res) => {
-  res.send('여행 MBTI API 서버입니다!');
 });

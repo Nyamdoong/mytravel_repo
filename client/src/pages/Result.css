@@ -1,21 +1,92 @@
+/* src/pages/Result.css */
+
 .result-container {
-    text-align: center;
-    padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;                     /* 중앙 정렬 */
+  padding: 30px 20px;                 /* 여백 */
+  text-align: center;                 /* 텍스트 중앙 정렬 */
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.mbti-type {
+  font-size: 32px;
+  color: #4caf50;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.explanation {
+  font-size: 16px;
+  color: #777;
+  margin-top: 5px;
+}
+
+.plan-buttons {
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.plan-buttons button {
+  padding: 10px 25px;
+  border: 2px solid #FFD0D0;
+  background-color: white;
+  color: #FFD0D0;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plan-buttons button:hover {
+  background-color: #ffe5e5;
+}
+
+.plan-buttons button.active {
+  background-color: #FFD0D0;         /* 선택된 버튼 색상 */
+  color: white;
+  border: 2px solid #FFD0D0;
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+.schedule-box {
+  margin-top: 25px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  text-align: left;                  /* 일정 내용은 왼쪽 정렬 */
+}
+
+.schedule-box h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.schedule-box ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.schedule-box li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* ✅ 반응형 - 모바일에서는 여백 제거하고 꽉차게 */
+@media (max-width: 768px) {
+  .result-container {
+    padding: 20px 10px;
   }
-  
-  .mbti-type {
-    color: #5A7FFF;
-    font-size: 48px;
+  .plan-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
-  
-  .result-image {
-    width: 200px;
-    margin: 20px 0;
-  }
-  
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-  
+}

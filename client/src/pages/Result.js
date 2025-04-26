@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Result.css';
 import schedules from '../data/schedules';
+import KakaoMap from '../components/KakaoMap';
 
-// ⭐ 캐릭터 이미지 리스트!
+// 캐릭터 이미지 리스트
 import goofy from '../assets/goofy.png';
 import elsa from '../assets/elsa.jpg';
 import jerry from '../assets/jerry.jpg';
@@ -14,23 +15,16 @@ import spongebob from '../assets/spongebob.jpg';
 import stch from '../assets/stch.jpg';
 import tom from '../assets/tom.jpg';
 
-// 🟢 이미지 리스트 배열
 const characterImages = [goofy, elsa, jerry, miki, olaf, spongebob, stch, tom];
 
 const calculateMBTI = (answers) => {
   if (!answers || answers.length !== 9) return null;
-
   const count = { J: 0, P: 0, A: 0, R: 0, U: 0, N: 0 };
-  answers.forEach((type) => {
-    count[type]++;
-  });
+  answers.forEach((type) => { count[type]++; });
 
-  const mbti =
-    (count.J >= count.P ? 'J' : 'P') +
-    (count.A >= count.R ? 'A' : 'R') +
-    (count.U >= count.N ? 'U' : 'N');
-
-  return mbti;
+  return (count.J >= count.P ? 'J' : 'P') +
+         (count.A >= count.R ? 'A' : 'R') +
+         (count.U >= count.N ? 'U' : 'N');
 };
 
 const Result = () => {
@@ -38,11 +32,12 @@ const Result = () => {
   const navigate = useNavigate();
   const answers = location.state?.answers;
 
-  const [selectedPlan, setSelectedPlan] = useState(0); // ✅ useState는 최상단에 1번만!
-
-  // 🟢 랜덤 캐릭터 선택 (랜더링마다 랜덤)
-  const randomIndex = Math.floor(Math.random() * characterImages.length);
-  const randomCharacter = characterImages[randomIndex];
+  // ✅ useState들은 최상단에!
+  const [selectedPlan, setSelectedPlan] = useState(0);
+  const [randomCharacter] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * characterImages.length);
+    return characterImages[randomIndex];
+  });
 
   if (!answers) {
     return <div>잘못된 접근입니다. 다시 시도해주세요!</div>;
@@ -56,7 +51,6 @@ const Result = () => {
       <h1>당신의 여행 MBTI는?</h1>
       <h2 className="mbti-type">{mbti}</h2>
 
-      {/* 랜덤 캐릭터 이미지 */}
       <img src={randomCharacter} alt="랜덤 캐릭터" width="200" />
 
       <p className="description">이 유형에 딱 맞는 여행 스타일이에요!</p>
@@ -88,6 +82,9 @@ const Result = () => {
               ))}
             </ul>
           </div>
+
+          {/* ✅ 지도 출력 */}
+          <KakaoMap />
         </>
       ) : (
         <p>아직 이 유형에 대한 추천 일정이 준비되지 않았어요!</p>

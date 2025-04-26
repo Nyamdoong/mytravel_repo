@@ -7,15 +7,22 @@ const KakaoMap = () => {
     if (!existingScript) {
       const script = document.createElement('script');
       script.id = 'kakao-map-script';
-      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=67695b4f0cc321dc89daa86034682e80&autoload=true`;
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=67695b4f0cc321dc89daa86034682e80&autoload=false`; // autoload=false!
       script.async = true;
-      document.head.appendChild(script);
-
       script.onload = () => {
-        loadMap();
+        // ✅ 여기서 확실히 로드된 후 loadMap 실행
+        window.kakao.maps.load(() => {
+          loadMap();
+        });
       };
+      document.head.appendChild(script);
     } else {
-      loadMap();
+      // ✅ 이미 있으면 바로 loadMap
+      if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(() => {
+          loadMap();
+        });
+      }
     }
   }, []);
 

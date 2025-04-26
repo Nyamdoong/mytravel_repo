@@ -1,19 +1,18 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Result.css';
-import goofyImg from '../assets/goofy.png'; // 결과 이미지 (원하는 걸로 변경 가능!)
+import goofyImg from '../assets/goofy.png'; // 결과 이미지 (원하는 걸로 변경 OK)
+import schedules from '../data/schedules'; // ✅ 일정 데이터 불러오기
 
 const calculateMBTI = (answers) => {
   if (!answers || answers.length !== 9) return null;
 
-  // 각 유형별 카운트
   const count = { J: 0, P: 0, A: 0, R: 0, U: 0, N: 0 };
 
   answers.forEach((type) => {
     count[type]++;
   });
 
-  // MBTI 결정 (각 축별로 다수 득표 기준)
   const mbti =
     (count.J >= count.P ? 'J' : 'P') +
     (count.A >= count.R ? 'A' : 'R') +
@@ -32,6 +31,7 @@ const Result = () => {
   }
 
   const mbti = calculateMBTI(answers);
+  const matchedSchedules = schedules[mbti]; // ✅ MBTI 결과로 일정 찾기
 
   return (
     <div className="result-container">
@@ -46,6 +46,25 @@ const Result = () => {
         {mbti[1]}: {mbti[1] === 'A' ? '활동적인 타입 (Adventurous)' : '휴식형 (Relaxed)'} /&nbsp;
         {mbti[2]}: {mbti[2] === 'U' ? '도시 선호 (Urban)' : '자연 선호 (Nature)'}
       </p>
+
+      {/* ✅ 추천 일정 출력 부분 */}
+      <h3>추천 일정</h3>
+      {matchedSchedules ? (
+        matchedSchedules.map((schedule, index) => (
+          <div key={index} className="schedule-box">
+            <h4>{schedule.title}</h4>
+            <ul>
+              {schedule.schedule.map((item, idx) => (
+                <li key={idx}>
+                  <strong>{item}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      ) : (
+        <p>아직 이 유형에 대한 추천 일정이 준비되지 않았어요!</p>
+      )}
 
       <button onClick={() => navigate('/')}>처음으로 돌아가기</button>
     </div>

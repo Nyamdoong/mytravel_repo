@@ -7,7 +7,7 @@ const KakaoMap = () => {
     if (!existingScript) {
       const script = document.createElement('script');
       script.id = 'kakao-map-script';
-      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=67695b4f0cc321dc89daa86034682e80&autoload=false`; // autoload=false!
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=9d4b026f1d1ee43003937064e3b1e8ed&autoload=false`; // autoload=false!
       script.async = true;
       script.onload = () => {
         // ✅ 여기서 확실히 로드된 후 loadMap 실행

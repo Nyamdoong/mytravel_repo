@@ -82,6 +82,13 @@ const Result = () => {
               ))}
             </ul>
           </div>
+                    <button
+            className="ai-button"
+            onClick={() => navigate('/ai-recommend', { state: { mbti, region: '강릉' } })}
+          >
+            ✨ AI 추천 보기
+          </button>
+
 
           {/* ✅ 지도 출력 */}
           <KakaoMap />

@@ -1,16 +1,31 @@
-// src/components/KakaoLogin.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
+  const [sdkLoaded, setSdkLoaded] = useState(false);
 
+  // ✅ 윶니니 앱 키로 교체됨
+  const KAKAO_APP_KEY = '67695b4f0cc321dc89daa86034682e80';
 
-  
+  // 1. SDK 로드 여부 확인
+  useEffect(() => {
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(KAKAO_APP_KEY);
+      console.log('✅ Kakao SDK initialized');
+    }
+
+    if (window.Kakao) {
+      setSdkLoaded(true);
+    } else {
+      console.error('❌ Kakao SDK is not loaded yet.');
+    }
+  }, []);
 
   const handleKakaoLogin = () => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init('9d4b026f1d1ee43003937064e3b1e8ed');
+    if (!window.Kakao) {
+      alert('카카오 SDK가 아직 로드되지 않았습니다.');
+      return;
     }
 
     window.Kakao.Auth.login({
@@ -34,25 +49,23 @@ const KakaoLogin = () => {
             })
               .then((res) => res.json())
               .then((data) => {
-                //console.log('로그인 성공:', data);
-                console.log(`로그인 성공: ${data.nickname || kakaoAccount.profile.nickname}`);
-                //console.log('이동할 경로: /quiz');
+                console.log(`✅ 로그인 성공: ${data.nickname || kakaoAccount.profile.nickname}`);
                 navigate('/quiz');
               });
           },
           fail: function (error) {
-            console.error('사용자 정보 요청 실패:', error);
+            console.error('❌ 사용자 정보 요청 실패:', error);
           },
         });
       },
       fail: function (err) {
-        console.error('로그인 실패:', err);
+        console.error('❌ 로그인 실패:', err);
       },
     });
   };
 
   return (
-    <button className="kakao-button" onClick={handleKakaoLogin}>
+    <button className="kakao-button" onClick={handleKakaoLogin} disabled={!sdkLoaded}>
       카카오로 시작하기
     </button>
   );

@@ -4,13 +4,14 @@ const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
 const cors = require('cors');
+const fetch = require('node-fetch'); // ✅ GPT 요청 위해 필요
 
 const app = express();
 const port = 3000;
 
-app.use(cors()); // 모든 도메인 허용
-app.use(express.json()); // JSON 파싱 허용
-app.use(express.static(path.join(__dirname, 'public'))); // 정적 파일 서빙
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ MySQL 연결
 const db = mysql.createConnection({
@@ -26,6 +27,41 @@ db.connect((err) => {
     return;
   }
   console.log('MySQL 연결 성공!');
+});
+
+// ✅ GPT 추천 API (Groq)
+app.post('/api/recommend-course', async (req, res) => {
+  const { mbti, region } = req.body;
+
+  const prompt = `당신은 여행 가이드입니다. 사용자의 MBTI는 ${mbti}이고 여행지는 ${region}입니다.
+사용자에게 한국어로 친절하고 자세하게 1일 여행 코스를 추천해 주세요. 구성: 숙소, 카페, 산책로.`;
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama3-70b-8192',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7
+      })
+    });
+
+    const data = await response.json();
+    console.log('Groq 응답:', data);
+
+    if (data.choices && data.choices.length > 0) {
+      res.json({ course: data.choices[0].message.content });
+    } else {
+      res.status(500).json({ error: '추천 결과가 없습니다.' });
+    }
+  } catch (err) {
+    console.error('Groq API 호출 실패:', err);
+    res.status(500).json({ error: '추천 생성 실패' });
+  }
 });
 
 // ✅ 질문 리스트 GET
@@ -99,7 +135,18 @@ app.post('/kakao-login', (req, res) => {
   });
 });
 
-// ✅ 첫 화면 (index.html)
+// ✅ 사용자 수 조회
+app.get('/user-count', (req, res) => {
+  const countQuery = 'SELECT COUNT(*) AS count FROM users';
+  db.query(countQuery, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'DB 오류 (user-count)' });
+    }
+    res.json({ count: results[0].count });
+  });
+});
+
+// ✅ 첫 화면
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -108,15 +155,3 @@ app.get('/', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(`서버가 포트 ${port}번에서 외부 접속 가능하게 실행 중!`);
 });
-
-// 전체 사용자 수 가져오기
-app.get('/user-count', (req, res) => {
-  const countQuery = 'SELECT COUNT(*) AS count FROM users';
-  db.query(countQuery, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'DB 오류 (user-count)' });  // ✅ 문자열 대신 JSON 응답!
-    }
-    res.json({ count: results[0].count });
-  });
-});
-

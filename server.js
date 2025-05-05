@@ -108,3 +108,15 @@ app.get('/', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(`서버가 포트 ${port}번에서 외부 접속 가능하게 실행 중!`);
 });
+
+// 전체 사용자 수 가져오기
+app.get('/user-count', (req, res) => {
+  const countQuery = 'SELECT COUNT(*) AS count FROM users';
+  db.query(countQuery, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'DB 오류 (user-count)' });  // ✅ 문자열 대신 JSON 응답!
+    }
+    res.json({ count: results[0].count });
+  });
+});
+

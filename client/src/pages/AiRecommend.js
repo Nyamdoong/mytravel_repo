@@ -14,6 +14,8 @@ const AiRecommend = () => {
     const fetchAI = async () => {
       setLoading(true);
       try {
+        // 🔇 실제 요청은 임시 주석 처리
+        /*
         const res = await fetch('http://localhost:3000/api/recommend-course', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -21,6 +23,11 @@ const AiRecommend = () => {
         });
         const data = await res.json();
         setRecommendation(data.course);
+        */
+
+        // ✅ 임시로 더미 텍스트 넣기
+        setRecommendation(`🔧 AI 추천은 현재 비활성화 상태입니다.
+MBTI: ${mbti}, 지역: ${region}에 맞는 여행 코스는 곧 제공될 예정이에요!`);
       } catch (err) {
         setRecommendation('AI 추천을 불러오는데 실패했어요 😢');
       }

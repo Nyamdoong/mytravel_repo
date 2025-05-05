@@ -155,3 +155,36 @@ app.get('/', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(`서버가 포트 ${port}번에서 외부 접속 가능하게 실행 중!`);
 });
+
+// server.js 하단에 추가
+app.post('/api/coords', async (req, res) => {
+  const { place } = req.body;
+
+  if (!place) {
+    return res.status(400).json({ error: 'place 값이 필요합니다.' });
+  }
+
+  try {
+    const response = await fetch(
+      `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(place)}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.documents.length === 0) {
+      return res.status(404).json({ error: '장소를 찾을 수 없습니다.' });
+    }
+
+    const { x, y } = data.documents[0]; // x = lng, y = lat
+    res.json({ lat: parseFloat(y), lng: parseFloat(x), name: place });
+  } catch (err) {
+    console.error('좌표 변환 오류:', err);
+    res.status(500).json({ error: '좌표 변환 실패' });
+  }
+});

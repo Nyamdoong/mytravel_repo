@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Result.css';
 import schedules from '../data/schedules';
-import KakaoMap from '../components/KakaoMap';
+import MapView from '../components/MapView';
+
 
 // 캐릭터 이미지 리스트
 import goofy from '../assets/goofy.png';
@@ -91,7 +92,7 @@ const Result = () => {
 
 
           {/* ✅ 지도 출력 */}
-          <KakaoMap />
+          <MapView />
         </>
       ) : (
         <p>아직 이 유형에 대한 추천 일정이 준비되지 않았어요!</p>

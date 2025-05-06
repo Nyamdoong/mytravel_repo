@@ -16,6 +16,7 @@ const MapView = ({ schedule }) => {
         }
       );
       const data = await res.json();
+      console.log('📦 응답 받은 데이터:', data);
 
       if (data.documents.length > 0) {
         const result = {
@@ -43,10 +44,7 @@ const MapView = ({ schedule }) => {
 
   useEffect(() => {
     const loadMap = async () => {
-      if (!schedule || schedule.length === 0) {
-        console.warn('⚠️ schedule 데이터 없음');
-        return;
-      }
+      if (!schedule || schedule.length === 0) return;
 
       const keywords = schedule.map(getPlaceNameFromLine);
       const results = await Promise.all(keywords.map(getCoordsByKeyword));
@@ -64,6 +62,7 @@ const MapView = ({ schedule }) => {
       };
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
+      // 👉 마커 및 인포윈도우
       filtered.forEach((place) => {
         const marker = new window.kakao.maps.Marker({
           map,
@@ -82,8 +81,24 @@ const MapView = ({ schedule }) => {
           infowindow.close()
         );
       });
+
+      // ✅ 마커 간 선(Polyline) 그리기
+      const linePath = filtered.map(
+        (place) => new window.kakao.maps.LatLng(place.lat, place.lng)
+      );
+
+      const polyline = new window.kakao.maps.Polyline({
+        path: linePath,
+        strokeWeight: 4,
+        strokeColor: '#FF5A5F',
+        strokeOpacity: 0.8,
+        strokeStyle: 'solid',
+      });
+
+      polyline.setMap(map);
     };
 
+    // ✅ 스크립트 로드 또는 바로 실행
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(loadMap);
     } else {
@@ -93,7 +108,7 @@ const MapView = ({ schedule }) => {
       script.onload = () => window.kakao.maps.load(loadMap);
       document.head.appendChild(script);
     }
-  }, [schedule]); // ✅ schedule이 바뀔 때마다 실행되도록 설정
+  }, [schedule]);
 
   return (
     <div>

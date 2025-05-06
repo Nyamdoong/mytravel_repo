@@ -11,6 +11,8 @@ const Intro = () => {
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [userCount, setUserCount] = useState(null);
 
+  console.log("✅ Intro 컴포넌트 진입");
+
   // ✅ 사용자 수 가져오기
   useEffect(() => {
     fetch('http://localhost:3000/user-count')
@@ -25,18 +27,21 @@ const Intro = () => {
   }, []);
 
   // ✅ 카카오 SDK 초기화
+
   useEffect(() => {
+    console.log('Kakao key:', process.env.REACT_APP_KAKAO_JS_KEY);
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init('67695b4f0cc321dc89daa86034682e80');
+      window.Kakao.init('4a9b72ac13cab18ce4be571b20843391');
       console.log('✅ Kakao SDK initialized');
     }
-
+  
     if (window.Kakao) {
       setSdkLoaded(true);
     } else {
       console.error('❌ Kakao SDK is not loaded yet.');
     }
   }, []);
+  
 
   // ✅ 로그인 핸들러
   const handleKakaoLogin = () => {

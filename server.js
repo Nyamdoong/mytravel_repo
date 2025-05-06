@@ -115,6 +115,7 @@ app.post('/result', (req, res) => {
 // ✅ 카카오 로그인 처리
 app.post('/kakao-login', (req, res) => {
   const { id, nickname } = req.body;
+  console.log('🔍 로그인 요청 받음:', req.body);
   if (!id || !nickname) {
     return res.status(400).json({ error: '필수 데이터 누락' });
   }

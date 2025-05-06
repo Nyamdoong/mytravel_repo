@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import schedules from '../data/schedules';
 
 const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 const JS_API_KEY = process.env.REACT_APP_KAKAO_JS_KEY;
 
-const MapView = () => {
+const MapView = ({ schedule }) => {
   const getCoordsByKeyword = async (keyword) => {
     try {
       console.log(`📍 키워드 검색 중: ${keyword}`);
@@ -17,7 +16,6 @@ const MapView = () => {
         }
       );
       const data = await res.json();
-      console.log('📦 응답 받은 데이터:', data);
 
       if (data.documents.length > 0) {
         const result = {
@@ -45,8 +43,12 @@ const MapView = () => {
 
   useEffect(() => {
     const loadMap = async () => {
-      const rawSchedule = schedules['JAU'][0].schedule;
-      const keywords = rawSchedule.map(getPlaceNameFromLine);
+      if (!schedule || schedule.length === 0) {
+        console.warn('⚠️ schedule 데이터 없음');
+        return;
+      }
+
+      const keywords = schedule.map(getPlaceNameFromLine);
       const results = await Promise.all(keywords.map(getCoordsByKeyword));
       const filtered = results.filter((r) => r !== null);
 
@@ -91,7 +93,7 @@ const MapView = () => {
       script.onload = () => window.kakao.maps.load(loadMap);
       document.head.appendChild(script);
     }
-  }, []);
+  }, [schedule]); // ✅ schedule이 바뀔 때마다 실행되도록 설정
 
   return (
     <div>

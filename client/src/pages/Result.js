@@ -5,7 +5,6 @@ import './Result.css';
 import schedules from '../data/schedules';
 import MapView from '../components/MapView';
 
-
 // 캐릭터 이미지 리스트
 import goofy from '../assets/goofy.png';
 import elsa from '../assets/elsa.jpg';
@@ -33,7 +32,6 @@ const Result = () => {
   const navigate = useNavigate();
   const answers = location.state?.answers;
 
-  // ✅ useState들은 최상단에!
   const [selectedPlan, setSelectedPlan] = useState(0);
   const [randomCharacter] = useState(() => {
     const randomIndex = Math.floor(Math.random() * characterImages.length);
@@ -83,16 +81,16 @@ const Result = () => {
               ))}
             </ul>
           </div>
-                    <button
+
+          <button
             className="ai-button"
             onClick={() => navigate('/ai-recommend', { state: { mbti, region: '강릉' } })}
           >
             ✨ AI 추천 보기
           </button>
 
-
-          {/* ✅ 지도 출력 */}
-          <MapView />
+          {/* ✅ 선택한 일정만 넘기도록 수정 */}
+          <MapView schedule={matchedSchedules[selectedPlan].schedule} />
         </>
       ) : (
         <p>아직 이 유형에 대한 추천 일정이 준비되지 않았어요!</p>

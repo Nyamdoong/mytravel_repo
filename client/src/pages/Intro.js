@@ -30,8 +30,10 @@ const Intro = () => {
 
   useEffect(() => {
     console.log('Kakao key:', process.env.REACT_APP_KAKAO_JS_KEY);
+    const kakaoKey = process.env.REACT_APP_KAKAO_JS_KEY;
+
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init('4a9b72ac13cab18ce4be571b20843391');
+      window.Kakao.init('9d4b026f1d1ee43003937064e3b1e8ed');
       console.log('✅ Kakao SDK initialized');
     }
   

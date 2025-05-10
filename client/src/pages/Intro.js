@@ -13,9 +13,9 @@ const Intro = () => {
 
   console.log("✅ Intro 컴포넌트 진입");
 
-  // ✅ 사용자 수 가져오기
+  // ✅ 사용자 수 가져오기 (수정됨!)
   useEffect(() => {
-    fetch('http://localhost:3000/user-count')
+    fetch('http://10.0.10.110:3000/user-count')
       .then((res) => res.json())
       .then((data) => {
         console.log('✅ 사용자 수 불러오기 성공:', data.count);
@@ -26,24 +26,22 @@ const Intro = () => {
       });
   }, []);
 
-  // ✅ 카카오 SDK 초기화
-
+  // ✅ 카카오 SDK 초기화 (기존 유지)
   useEffect(() => {
     console.log('Kakao key:', process.env.REACT_APP_KAKAO_JS_KEY);
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init('4a9b72ac13cab18ce4be571b20843391');
       console.log('✅ Kakao SDK initialized');
     }
-  
+
     if (window.Kakao) {
       setSdkLoaded(true);
     } else {
       console.error('❌ Kakao SDK is not loaded yet.');
     }
   }, []);
-  
 
-  // ✅ 로그인 핸들러
+  // ✅ 로그인 핸들러 (수정됨!)
   const handleKakaoLogin = () => {
     if (!window.Kakao) {
       alert('카카오 SDK가 아직 로드되지 않았습니다.');
@@ -62,7 +60,7 @@ const Intro = () => {
               nickname: kakaoAccount.profile.nickname,
             };
 
-            fetch('http://localhost:3000/kakao-login', {
+            fetch('http://10.0.10.110:3000/kakao-login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(userData),

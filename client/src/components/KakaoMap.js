@@ -5,6 +5,8 @@ const KakaoMap = () => {
 
   useEffect(() => {
     const existingScript = document.getElementById('kakao-map-script');
+    console.log('✅ JS_KEY:', process.env.REACT_APP_KAKAO_JS_KEY);
+    console.log('JS_KEY:', JS_KEY);
 
     if (!existingScript) {
       const script = document.createElement('script');

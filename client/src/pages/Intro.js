@@ -29,7 +29,6 @@ const Intro = () => {
   // ✅ 카카오 SDK 초기화 (기존 유지)
   useEffect(() => {
     console.log('Kakao key:', process.env.REACT_APP_KAKAO_JS_KEY);
-    const kakaoKey = process.env.REACT_APP_KAKAO_JS_KEY;
 
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init('9d4b026f1d1ee43003937064e3b1e8ed');
@@ -101,8 +100,8 @@ const Intro = () => {
         {userCount !== null ? `${userCount}명이 이미 참여했어요!` : '참여자 수 불러오는 중...'}
       </p>
       <div className="login-icons">
-        <img src={googleImg} alt="Google Login" width="50" />
-        <img src={naverImg} alt="Naver Login" width="50" />
+        <img src={googleImg} alt="Google Login" className="login-logo" />
+        <img src={naverImg} alt="Naver Login" className="login-logo naver" />
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ const mysql = require('mysql2');
 const path = require('path');
 const cors = require('cors');
 const fetch = require('node-fetch'); // ✅ GPT 요청 위해 필요
+const naverAuth = require('./auth');   // ✅ 이 한 줄만 추가
+
 
 const app = express();
 const port = 3000;
@@ -12,6 +14,8 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/auth', naverAuth);   // ✅ 네이버 로그인 route 추가
+
 
 // ✅ MySQL 연결
 const db = mysql.createConnection({

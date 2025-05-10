@@ -13,7 +13,7 @@ const Intro = () => {
 
   console.log("✅ Intro 컴포넌트 진입");
 
-  // ✅ 사용자 수 가져오기 (수정됨!)
+  // ✅ 사용자 수 가져오기
   useEffect(() => {
     fetch('http://10.0.10.110:3000/user-count')
       .then((res) => res.json())
@@ -26,12 +26,12 @@ const Intro = () => {
       });
   }, []);
 
-  // ✅ 카카오 SDK 초기화 (기존 유지)
+  // ✅ 카카오 SDK 초기화
   useEffect(() => {
     console.log('Kakao key:', process.env.REACT_APP_KAKAO_JS_KEY);
 
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init('9d4b026f1d1ee43003937064e3b1e8ed');
+      window.Kakao.init(process.env.REACT_APP_KAKAO_JS_KEY);
       console.log('✅ Kakao SDK initialized');
     }
 
@@ -42,7 +42,7 @@ const Intro = () => {
     }
   }, []);
 
-  // ✅ 로그인 핸들러 (수정됨!)
+  // ✅ 카카오 로그인
   const handleKakaoLogin = () => {
     if (!window.Kakao) {
       alert('카카오 SDK가 아직 로드되지 않았습니다.');
@@ -86,6 +86,21 @@ const Intro = () => {
     });
   };
 
+  // ✅ 네이버 로그인
+  const handleNaverLogin = () => {
+    const clientId = process.env.REACT_APP_NAVER_CLIENT_ID;
+    const redirectUri = process.env.REACT_APP_NAVER_REDIRECT_URI;
+    const state = "MYTRAVELSTATE";
+
+    if (!clientId || !redirectUri) {
+      console.error("❌ Naver Client ID 또는 Redirect URI가 없습니다.");
+      return;
+    }
+
+    window.location.href = 
+      `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+  };
+
   return (
     <div className="intro-container">
       <h1>여행용 MBTI가 따로 있다고?</h1>
@@ -101,7 +116,7 @@ const Intro = () => {
       </p>
       <div className="login-icons">
         <img src={googleImg} alt="Google Login" className="login-logo" />
-        <img src={naverImg} alt="Naver Login" className="login-logo naver" />
+        <img src={naverImg} alt="Naver Login" className="login-logo naver" onClick={handleNaverLogin} />
       </div>
     </div>
   );

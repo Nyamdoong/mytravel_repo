@@ -1,0 +1,5 @@
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  kakao_id BIGINT NOT NULL UNIQUE,
+  nickname VARCHAR(100)
+);

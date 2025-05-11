@@ -31,6 +31,7 @@ const Result = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const answers = location.state?.answers;
+  const region = location.state?.location;
 
   const [selectedPlan, setSelectedPlan] = useState(0);
   const [randomCharacter] = useState(() => {
@@ -84,7 +85,7 @@ const Result = () => {
 
           <button
             className="ai-button"
-            onClick={() => navigate('/ai-recommend', { state: { mbti, region: '강릉' } })}
+            onClick={() => navigate('/ai-recommend', { state: { mbti, region } })}
           >
             ✨ AI 추천 보기
           </button>

@@ -1,34 +1,40 @@
-// src/components/KakaoMap.js
 import React, { useEffect } from 'react';
 
 const KakaoMap = () => {
+  const JS_KEY = process.env.REACT_APP_KAKAO_JS_KEY;
+
   useEffect(() => {
     const existingScript = document.getElementById('kakao-map-script');
+    console.log('✅ JS_KEY:', process.env.REACT_APP_KAKAO_JS_KEY);
+    console.log('JS_KEY:', JS_KEY);
+
     if (!existingScript) {
       const script = document.createElement('script');
       script.id = 'kakao-map-script';
-      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=9d4b026f1d1ee43003937064e3b1e8ed&autoload=false`; // autoload=false!
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${JS_KEY}&autoload=false`; // ✅ env에서 키 가져옴
       script.async = true;
       script.onload = () => {
-        // ✅ 여기서 확실히 로드된 후 loadMap 실행
-        window.kakao.maps.load(() => {
-          loadMap();
-        });
+        if (window.kakao && window.kakao.maps) {
+          window.kakao.maps.load(() => {
+            loadMap();
+          });
+        } else {
+          console.error('❌ Kakao Maps SDK 로딩 실패');
+        }
       };
       document.head.appendChild(script);
     } else {
-      // ✅ 이미 있으면 바로 loadMap
       if (window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
           loadMap();
         });
       }
     }
-  }, []);
+  }, [JS_KEY]);
 
   const loadMap = () => {
     if (!window.kakao || !window.kakao.maps) {
-      console.error('Kakao Maps SDK not loaded!');
+      console.error('❌ Kakao Maps SDK 미로드 상태');
       return;
     }
 

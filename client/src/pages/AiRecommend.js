@@ -14,15 +14,21 @@ const AiRecommend = () => {
     const fetchAI = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:3000/api/recommend-course', {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/recommend-course`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mbti, region })
+          body: JSON.stringify({ mbti, region }),
         });
         const data = await res.json();
-        setRecommendation(data.course);
+
+        if (data.course) {
+          setRecommendation(data.course);
+        } else {
+          setRecommendation('🚧 AI 추천 결과가 없습니다.');
+        }
       } catch (err) {
-        setRecommendation('AI 추천을 불러오는데 실패했어요 😢');
+        console.error('AI 추천 요청 오류:', err);
+        setRecommendation('❌ AI 추천을 불러오는 데 실패했어요 😢');
       }
       setLoading(false);
     };
@@ -37,7 +43,9 @@ const AiRecommend = () => {
   return (
     <div className="ai-recommend-container">
       <h1>🧠 AI가 추천한 여행 코스</h1>
-      <p>MBTI: <strong>{mbti}</strong>, 지역: <strong>{region}</strong></p>
+      <p>
+        MBTI: <strong>{mbti}</strong>, 지역: <strong>{region}</strong>
+      </p>
       {loading ? (
         <p>추천 코스를 생성 중입니다... 잠시만 기다려주세요 ⏳</p>
       ) : (

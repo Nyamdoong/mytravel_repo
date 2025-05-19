@@ -29,7 +29,7 @@ const Quiz = () => {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       console.log('모든 답변:', newAnswers);
-      navigate('/result', { state: { answers: newAnswers } });
+      navigate('/location', { state: { answers: newAnswers } });
     }
   };
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import './AiRecommend.css';
+
 
 const AiRecommend = () => {
   const location = useLocation();

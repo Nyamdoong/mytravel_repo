@@ -1,0 +1,15 @@
+/* src/pages/AiRecommend.css */
+.recommend-text {
+    white-space: pre-wrap; /* 줄바꿈 + 자동 줄바꿈 허용 */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: 16px;
+    text-align: left;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 20px auto;
+  }
+  
